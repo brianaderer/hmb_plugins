@@ -1,0 +1,28 @@
+name: Deploy to SpinUpWP
+
+on:
+  push:
+    branches:
+      - staging  # Set this to your deployment branch, e.g., main or master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install PHP dependencies
+        run: composer install --no-dev
+
+      - name: deploy file
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: 'stagingadmin'
+          server: 3.133.135.142
+          ssh_private_key: ${{ secrets.SFTP_KEY }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          local_path: './*'
+          remote_path: './files/wp-content/themes/plugins/'
+          sftpArgs: '-o ConnectTimeout=5'
