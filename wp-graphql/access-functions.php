@@ -82,7 +82,6 @@ function graphql_format_type_name( $type_name ) {
 	return str_replace( ' ', '', ucfirst( ucwords( $formatted_type_name ) ) );
 }
 
-
 /**
  * Provides a simple way to run a GraphQL query without posting a request to the endpoint.
  *
@@ -150,8 +149,8 @@ function get_graphql_register_action() {
  *
  * Should be used at the `graphql_register_types` hook.
  *
- * @param mixed|string|array<string> $interface_names Array of one or more names of the GraphQL Interfaces to apply to the GraphQL Types
- * @param mixed|string|array<string> $type_names      Array of one or more names of the GraphQL Types to apply the interfaces to.
+ * @param string|string[] $interface_names Array of one or more names of the GraphQL Interfaces to apply to the GraphQL Types
+ * @param string|string[] $type_names      Array of one or more names of the GraphQL Types to apply the interfaces to.
  *
  * Example:
  * The following would register the "MyNewInterface" interface to the Post and Page type in the
@@ -625,7 +624,6 @@ function deregister_graphql_field( string $type_name, string $field_name ) {
 	);
 }
 
-
 /**
  * Given a Connection Name, this removes the connection from the Schema
  *
@@ -735,7 +733,7 @@ function register_graphql_settings_field( string $group, array $config ) {
  *
  * @param mixed|string|mixed[] $message The debug message
  * @param array<string,mixed>  $config  The debug config. Should be an associative array of keys and values.
- *                                      $config['type'] will set the "type" of the log, default type is GRAPHQL_DEBUG. 
+ *                                      $config['type'] will set the "type" of the log, default type is GRAPHQL_DEBUG.
  *                                      Other fields added to $config will be merged into the debug entry.
  *
  * @return void
@@ -819,10 +817,10 @@ function get_graphql_setting( string $option_name, $default_value = '', $section
 
 	/**
 	 * Filter the section fields
-	 *
-	 * @param array  $section_fields The values of the fields stored for the section
-	 * @param string $section_name   The name of the section
-	 * @param mixed  $default_value  The default value for the option being retrieved
+
+	 * @param array<string,mixed> $section_fields The values of the fields stored for the section
+	 * @param string              $section_name   The name of the section
+	 * @param mixed               $default_value  The default value for the option being retrieved
 	 */
 	$section_fields = apply_filters( 'graphql_get_setting_section_fields', $section_fields, $section_name, $default_value );
 
@@ -834,11 +832,11 @@ function get_graphql_setting( string $option_name, $default_value = '', $section
 	/**
 	 * Filter the value before returning it
 	 *
-	 * @param mixed  $value          The value of the field
-	 * @param mixed  $default_value  The default value if there is no value set
-	 * @param string $option_name    The name of the option
-	 * @param array  $section_fields The setting values within the section
-	 * @param string $section_name   The name of the section the setting belongs to
+	 * @param mixed               $value          The value of the field
+	 * @param mixed               $default_value  The default value if there is no value set
+	 * @param string              $option_name    The name of the option
+	 * @param array<string,mixed> $section_fields The setting values within the section
+	 * @param string              $section_name   The name of the section the setting belongs to
 	 */
 	return apply_filters( 'graphql_get_setting_section_field_value', $value, $default_value, $option_name, $section_fields, $section_name );
 }
@@ -952,4 +950,17 @@ if ( ! function_exists( 'str_ends_with' ) ) {
 
 		return $needle_length <= strlen( $haystack ) && 0 === substr_compare( $haystack, $needle, -$needle_length );
 	}
+}
+
+/**
+ * @param string       $slug A unique slug to identify the admin notice by
+ * @param array<mixed> $config The config for the admin notice. Determines visibility, context, etc.
+ */
+function register_graphql_admin_notice( string $slug, array $config ): void {
+	add_action(
+		'graphql_admin_notices_init',
+		static function ( \WPGraphQL\Admin\AdminNotices $admin_notices ) use ( $slug, $config ) {
+			$admin_notices->add_admin_notice( $slug, $config );
+		}
+	);
 }

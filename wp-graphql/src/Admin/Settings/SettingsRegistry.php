@@ -128,9 +128,9 @@ class SettingsRegistry {
 		/**
 		 * Filter the setting field config
 		 *
-		 * @param array  $field_config The field config for the setting
-		 * @param string $field_name   The name of the field (unfilterable in the config)
-		 * @param string $section      The slug of the section the field is registered to
+		 * @param array<string,mixed>  $field_config The field config for the setting
+		 * @param string               $field_name   The name of the field (unfilterable in the config)
+		 * @param string               $section      The slug of the section the field is registered to
 		 */
 		$field = apply_filters( 'graphql_setting_field_config', $field_config, $field_name, $section );
 
@@ -160,7 +160,7 @@ class SettingsRegistry {
 		/**
 		 * Filter the settings sections
 		 *
-		 * @param array $setting_sections The registered settings sections
+		 * @param array<string,array<string,mixed>> $setting_sections The registered settings sections
 		 */
 		$setting_sections = apply_filters( 'graphql_settings_sections', $this->settings_sections );
 
@@ -493,7 +493,6 @@ class SettingsRegistry {
 		echo wp_kses( $html, Utils::get_allowed_wp_kses_html() );
 	}
 
-
 	/**
 	 * Displays a select box for creating the pages select box
 	 *
@@ -509,7 +508,7 @@ class SettingsRegistry {
 				'id'       => $args['section'] . '[' . $args['id'] . ']',
 				'echo'     => 0,
 			],
-			$args 
+			$args
 		);
 
 		$clean_args = [];
@@ -551,7 +550,7 @@ class SettingsRegistry {
 	 *
 	 * @param array<string,mixed> $options settings field args
 	 *
-	 * @return mixed
+	 * @return array<string,mixed>
 	 */
 	public function sanitize_options( array $options ) {
 		if ( ! $options ) {
@@ -576,7 +575,7 @@ class SettingsRegistry {
 	 *
 	 * @param string $slug option slug
 	 *
-	 * @return mixed string or bool false
+	 * @return callable|false
 	 */
 	public function get_sanitize_callback( $slug = '' ) {
 		if ( empty( $slug ) ) {

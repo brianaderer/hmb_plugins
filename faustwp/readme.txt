@@ -2,8 +2,8 @@
 Contributors: antpb, apmatthe, blakewpe, chriswiegman, claygriffiths, jasonkonen, joefusco, markkelnar, matthewguywright, mindctrl, modernnerd, rfmeier, TeresaGobble, thdespou, wpengine
 Tags: faustjs, faust, headless, decoupled, composable-architecture
 Requires at least: 5.7
-Tested up to: 6.4
-Stable tag: 1.2.0
+Tested up to: 6.5
+Stable tag: 1.3.0
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -54,31 +54,26 @@ plugins/faustwp/.wordpress-org/screenshot-3.png
 
 == Changelog ==
 
-= 1.2.0 =
+= 1.3.0 =
 
 ### Minor Changes
 
-- 5f78b15: Requests to robots.txt on the WordPress site are now accessible and are no longer redirected to the front-end site.
-- c163fa5: Added support for anonymous opt-in telemetry. Previously this functionality was in the Faust CLI package, but has been moved to the WordPress plugin instead. All telemetry collection is optional and anonymous, and it is disabled by default. If you were previously opted in from Faust CLI, once you update the Faust CLI packages your site will no longer send telemetry data unless you opt in again from the WordPress plugin.
+- a478997: The default settings for `enable_image_source` has been changed to "on" for new installs.
 
 ### Patch Changes
 
-- 205fb09: Improved plugin's process for handling blockset file uploads by leveraging WordPress' native [unzip_file](https://developer.wordpress.org/reference/functions/unzip_file/) function.
-- 41a6d9c: Fixed issue where term URIs were rewritten from relative to absolute during GraphQL requests when they should not have been. This was causing nodeByUri queries for terms to fail.
-- e725bda: Adds phpstan to CI/CD workflow. Runs as part of the lint step.
+- bced682: Ensure's any related translations will properly load by calling `load_text_domain`
 
-= 1.1.2 =
+= 1.2.3 =
 
 ### Patch Changes
 
-- 78a061a: Fixed a bug that caused links to files in wp-content to be rewritten to the Faust Front-end site URL when they should not have been.
-- 2559958: Bug Fix: Fixed missing call to autosave when using Post/Page previews.
-- 75f5c80: Fixed a bug where links were rewritten to the Faust Front-end Site URL when using the post editor, resulting in those rewritten links being saved to the post content and guid fields when they shouldn't be. These links are now saved with the URL pointing to the WP site, as they should be. They are still rewritten at runtime to link to the Front-end Site URL when appropriate.
+- 4724719: Faust now errors if the NEXT_PUBLIC_WORDPRESS_URL matches the Headless URL in Faust Plugin settings.
 
-= 1.1.1 =
+= 1.2.2 =
 
 ### Patch Changes
 
-- b2c0fd3: Updated the settings page to improve descriptions and documentation links.
+- 47f6bd0: Faust now warns you if the secret key in your environment is invalid or incorrect.
 
 [View the full changelog](https://github.com/wpengine/faustjs/blob/canary/plugins/faustwp/CHANGELOG.md)
