@@ -1,0 +1,26 @@
+name: Deploy to SpinUpWP
+
+on:
+  push:
+    branches:
+      - main  # Set this to your deployment branch, e.g., main or master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      #clean push, maybe need to run a manual delete first
+      - name: deploy file
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: 'admin'
+          server: 18.226.214.105
+          ssh_private_key: ${{ secrets.SFTP_KEY }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          local_path: './*'
+          remote_path: './files/wp-content/plugins'
+          sftpArgs: '-o ConnectTimeout=5'
