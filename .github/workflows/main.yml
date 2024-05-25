@@ -3,7 +3,7 @@ name: Deploy to SpinUpWP - MAIN
 on:
   push:
     branches:
-      - staging  # Set this to your deployment branch, e.g., main or master
+      - main  # Set this to your deployment branch, e.g., main or master
 
 jobs:
   deploy:
