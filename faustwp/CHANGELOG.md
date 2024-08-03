@@ -1,5 +1,17 @@
 # Faust
 
+## 1.3.2
+
+### Patch Changes
+
+- 84076cd1: Bug: Fixes issue with blocks not showing in the block editor when running blockset command on WP >=v6.5
+
+## 1.3.1
+
+### Patch Changes
+
+- c28624c: Improve domain_match function to handle port checks and Add Comprehensive Test Cases
+
 ## 1.3.0
 
 ### Minor Changes
