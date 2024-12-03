@@ -8,7 +8,7 @@
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: wp-graphql-content-blocks
  * Domain Path: /languages
- * Version: 2.0.0
+ * Version: 4.3.1
  * Requires PHP: 7.4
  * Requires at least: 5.7
  *
@@ -19,10 +19,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WPGRAPHQL_CONTENT_BLOCKS_DIR', __DIR__ );
+if ( ! function_exists( 'wpgraphql_content_blocks_constants' ) ) {
+	/**
+	 * Defines plugin constants.
+	 *
+	 * @since 4.2.0
+	 */
+	function wpgraphql_content_blocks_constants(): void {
+		// Whether to autoload the files or not.
+		if ( ! defined( 'WPGRAPHQL_CONTENT_BLOCKS_AUTOLOAD' ) ) {
+			define( 'WPGRAPHQL_CONTENT_BLOCKS_AUTOLOAD', true );
+		}
 
-if ( ! class_exists( 'WPGraphQLContentBlocks' ) ) {
-	require_once __DIR__ . '/includes/WPGraphQLContentBlocks.php';
+		if ( ! defined( 'WPGRAPHQL_CONTENT_BLOCKS_PLUGIN_DIR' ) ) {
+			define( 'WPGRAPHQL_CONTENT_BLOCKS_PLUGIN_DIR', __DIR__ );
+		}
+
+		if ( ! defined( 'WPGRAPHQL_CONTENT_BLOCKS_PLUGIN_FILE' ) ) {
+			define( 'WPGRAPHQL_CONTENT_BLOCKS_PLUGIN_FILE', __FILE__ );
+		}
+
+		if ( ! defined( 'WPGRAPHQL_CONTENT_BLOCKS_PLUGIN_PATH' ) ) {
+			define( 'WPGRAPHQL_CONTENT_BLOCKS_PLUGIN_PATH', plugin_basename( WPGRAPHQL_CONTENT_BLOCKS_PLUGIN_FILE ) );
+		}
+		if ( ! defined( 'WPGRAPHQL_CONTENT_BLOCKS_VERSION' ) ) {
+			define( 'WPGRAPHQL_CONTENT_BLOCKS_VERSION', '4.3.1' );
+		}
+	}
 }
 
 
@@ -33,6 +56,15 @@ if ( ! function_exists( 'wpgraphql_content_blocks_init' ) ) {
 	 * @since 0.0.1
 	 */
 	function wpgraphql_content_blocks_init(): void {
+		// Define plugin constants.
+		wpgraphql_content_blocks_constants();
+
+		// Load the autoloader.
+		require_once __DIR__ . '/includes/Autoloader.php';
+		if ( ! \WPGraphQL\ContentBlocks\Autoloader::autoload() ) {
+			return;
+		}
+
 		// Instantiate the plugin class.
 		WPGraphQLContentBlocks::instance();
 	}

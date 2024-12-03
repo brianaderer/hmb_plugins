@@ -2,9 +2,9 @@
 Contributors: jasonbahl, tylerbarnes1, ryankanner, chopinbach, kidunot89, justlevine
 Tags: GraphQL, Headless, REST API, Decoupled, React
 Requires at least: 5.0
-Tested up to: 6.5
+Tested up to: 6.6
 Requires PHP: 7.1
-Stable tag: 1.27.2
+Stable tag: 1.29.2
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -92,6 +92,12 @@ Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without
 Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
 == Upgrade Notice ==
+
+= 1.28.0 =
+
+This release contains an internal refactor for how the Type Registry is generated which should lead to significant performance improvements for most users.
+
+While there are no intentional breaking changes, because this change impacts every suser we highly recommend testing this release thoroughly on staging servers to ensure the changes don't negatively impact your projects.
 
 = 1.26.0 =
 
@@ -275,6 +281,60 @@ The `uri` field was non-null on some Types in the Schema but has been changed to
 Composer dependencies are no longer versioned in Github. Recommended install source is WordPress.org or using Composer to get the code from Packagist.org or WPackagist.org.
 
 == Changelog ==
+
+= 1.29.2 =
+
+- fix: move assets/blueprint.json under .wordpress-org directory
+
+= 1.29.1 =
+
+**Chores / Bugfixes**
+
+- [#3226](https://github.com/wp-graphql/wp-graphql/pull/3226): chore: add blueprint.json so WPGraphQL can be demo'd with a live preview on WordPress.org
+- [#3218](https://github.com/wp-graphql/wp-graphql/pull/3218): docs: update upgrading.md to highlight how breaking change releases will be handled
+- [#3214](https://github.com/wp-graphql/wp-graphql/pull/3214): fix: lazy-resolve Post.sourceUrl and deprecate Post.sourceUrlsBySize
+- [#3224](https://github.com/wp-graphql/wp-graphql/pull/3224): chore(deps-dev): bump symfony/process from 5.4.40 to 5.4.46 in the composer group
+- [#3219](https://github.com/wp-graphql/wp-graphql/pull/3219): test: add tests for querying different sizes of media items
+- [#3229](https://github.com/wp-graphql/wp-graphql/pull/3229): fix: Deprecated null value warning in titleRendered callback
+
+
+= 1.29.0 =
+
+**New Features**
+
+- [#3208](https://github.com/wp-graphql/wp-graphql/pull/3208): feat: expose commenter edge fields
+- [#3207](https://github.com/wp-graphql/wp-graphql/pull/3207): feat: introduce get_graphql_admin_notices and convert AdminNotices class to a singleton
+
+**Chores / Bugfixes**
+
+- [#3213](https://github.com/wp-graphql/wp-graphql/pull/3213): chore(deps): bump the npm_and_yarn group across 1 directory with 4 updates
+- [#3212](https://github.com/wp-graphql/wp-graphql/pull/3212): chore(deps): bump dset from 3.1.3 to 3.1.4 in the npm_and_yarn group across 1 directory
+- [#3211](https://github.com/wp-graphql/wp-graphql/pull/3211): chore: add LABELS.md
+- [#3201](https://github.com/wp-graphql/wp-graphql/pull/3201): fix: ensure connectedTerms returns terms for the specified taxonomy only
+- [#3199](https://github.com/wp-graphql/wp-graphql/pull/3199): chore(deps-dev): bump the npm_and_yarn group across 1 directory with 2 updates
+
+
+= 1.28.1 =
+
+**Chores / Bugfixes**
+
+- [#3189](https://github.com/wp-graphql/wp-graphql/pull/3189): fix: [regression] missing placeholder in $wpdb->prepare() call
+
+= 1.28.0 =
+
+**Upgrade Notice**
+
+This release contains an internal refactor for how the Type Registry is generated which should lead to significant performance improvements for most users. While there is no known breaking changes, because this change impacts every user we highly recommend testing this release thoroughly on staging servers to ensure the changes don't negatively impact your projects.
+
+**New Features**
+
+- [#3172](https://github.com/wp-graphql/wp-graphql/pull/3172): feat: only `eagerlyLoadType` on introspection requests.
+
+**Chores / Bugfixes**
+
+- [#3181](https://github.com/wp-graphql/wp-graphql/pull/3181): ci: replace `docker-compose` commands with `docker compose`
+- [#3182](https://github.com/wp-graphql/wp-graphql/pull/3182): ci: test against WP 6.6
+- [#3183](https://github.com/wp-graphql/wp-graphql/pull/3183): fix: improve performance of SQL query in the user loader
 
 = 1.27.2 =
 

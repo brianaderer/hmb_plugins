@@ -7,22 +7,21 @@
 
 namespace WPGraphQL\ContentBlocks\Registry;
 
-use WP_Block_Type;
 use WPGraphQL\ContentBlocks\Blocks\Block;
 use WPGraphQL\ContentBlocks\Field\BlockSupports\Anchor;
-use WPGraphQL\ContentBlocks\Type\Scalar\Scalar;
 use WPGraphQL\ContentBlocks\Type\InterfaceType\EditorBlockInterface;
 use WPGraphQL\ContentBlocks\Type\InterfaceType\PostTypeBlockInterface;
+use WPGraphQL\ContentBlocks\Type\Scalar\Scalar;
 use WPGraphQL\ContentBlocks\Utilities\WPGraphQLHelpers;
 use WPGraphQL\ContentBlocks\Utilities\WPHelpers;
 use WPGraphQL\Registry\TypeRegistry;
 use WPGraphQL\Utils\Utils;
+use WP_Block_Type;
 
 /**
  * Class Registry
  */
 final class Registry {
-
 	/**
 	 * The instance of the WPGraphQL type registry.
 	 *
@@ -49,7 +48,7 @@ final class Registry {
 	 *
 	 * @var array
 	 */
-	public $block_interfaces = array();
+	public $block_interfaces = [];
 
 	/**
 	 * Registry constructor.
@@ -64,8 +63,6 @@ final class Registry {
 
 	/**
 	 * Registry init procedure.
-	 *
-	 * @return void
 	 */
 	public function init(): void {
 		$this->register_interface_types();
@@ -96,7 +93,7 @@ final class Registry {
 		$block_and_graphql_enabled_post_types = WPHelpers::get_supported_post_types();
 
 		if ( empty( $block_and_graphql_enabled_post_types ) ) {
-			return array();
+			return [];
 		}
 
 		$post_id = -1;
@@ -119,7 +116,7 @@ final class Registry {
 			 * @param \WP_Block_Editor_Context $block_editor_context                   The context of the Block Editor
 			 * @param \WP_Post_Type            $post_type                              The Post Type an Interface might be applied to the block for
 			 * @param array                    $all_registered_blocks                  Array of all registered blocks
-			 * @param array                    $supported_blocks_for_post_type_context Array of all supported blocks for the context
+			 * @param array|bool               $supported_blocks_for_post_type_context Array of all supported blocks for the context
 			 * @param array                    $block_and_graphql_enabled_post_types   Array of Post Types that have block editor and GraphQL support
 			 */
 			$should_apply_post_type_editor_block_interface = apply_filters( 'wpgraphql_content_blocks_should_apply_post_type_editor_blocks_interfaces', true, $block_name, $block_editor_context, $post_type, $all_registered_blocks, $supported_blocks_for_post_type_context, $block_and_graphql_enabled_post_types );
@@ -144,7 +141,7 @@ final class Registry {
 			}
 		}//end foreach
 
-		return ! empty( $this->block_interfaces[ $block_name ] ) ? $this->block_interfaces[ $block_name ] : array();
+		return ! empty( $this->block_interfaces[ $block_name ] ) ? $this->block_interfaces[ $block_name ] : [];
 	}
 
 	/**
@@ -162,7 +159,7 @@ final class Registry {
 		// Get additional interfaces a block should implement.
 		$additional_interfaces = $this->get_block_additional_interfaces( $block_name );
 
-		return array_merge( array( 'EditorBlock' ), $context_interfaces, $additional_interfaces );
+		return array_merge( [ 'EditorBlock' ], $context_interfaces, $additional_interfaces );
 	}
 
 	/**
@@ -173,8 +170,14 @@ final class Registry {
 	 * @return string[]
 	 */
 	public function get_block_additional_interfaces( string $block_name ): array {
-		$block_spec       = $this->block_type_registry->get_registered( $block_name );
-		$block_interfaces = array();
+		$block_spec = $this->block_type_registry->get_registered( $block_name );
+
+		// Bail if no block type is found.
+		if ( ! $block_spec instanceof \WP_Block_Type ) {
+			return [];
+		}
+
+		$block_interfaces = [];
 		// NOTE: Using add_filter here creates a performance penalty.
 		$block_interfaces = Anchor::get_block_interfaces( $block_interfaces, $block_spec );
 		return $block_interfaces;
@@ -188,8 +191,14 @@ final class Registry {
 	 * @return string[]
 	 */
 	public function get_block_attributes_interfaces( string $block_name ): array {
-		$block_spec       = $this->block_type_registry->get_registered( $block_name );
-		$block_interfaces = array();
+		$block_spec = $this->block_type_registry->get_registered( $block_name );
+
+		// Bail if no block type is found.
+		if ( ! $block_spec instanceof \WP_Block_Type ) {
+			return [];
+		}
+
+		$block_interfaces = [];
 		// NOTE: Using add_filter here creates a performance penalty.
 		$block_interfaces = Anchor::get_block_attributes_interfaces( $block_interfaces, $block_spec );
 		return $block_interfaces;
@@ -197,8 +206,6 @@ final class Registry {
 
 	/**
 	 * Register Interface types to the GraphQL Schema
-	 *
-	 * @return void
 	 */
 	protected function register_interface_types(): void {
 		// First register the NodeWithEditorBlocks interface by default
@@ -211,17 +218,22 @@ final class Registry {
 		}
 
 		$type_names = array_map(
-			function( $post_type ) {
+			static function ( $post_type ) {
 				return $post_type->graphql_single_name ?? null;
 			},
 			$supported_post_types
 		);
-		register_graphql_interfaces_to_types( array( 'NodeWithEditorBlocks' ), $type_names );
+
+		// Remove any null values from the array
+		$type_names = array_filter( $type_names );
+
+		register_graphql_interfaces_to_types( [ 'NodeWithEditorBlocks' ], $type_names );
+
 		$post_id = -1;
 		// For each Post type
 		foreach ( $supported_post_types as $post_type ) {
 			// Normalize the post type name
-			$type_name = WPGraphQLHelpers::format_type_name( $post_type->name );
+			$type_name = Utils::format_type_name( $post_type->graphql_single_name );
 
 			// retrieve a block_editor_context for the current post type
 			$block_editor_context = WPHelpers::get_block_editor_context( $type_name, $post_id-- );
@@ -240,7 +252,7 @@ final class Registry {
 				PostTypeBlockInterface::register_type( $type_name, $supported_blocks_for_post_type );
 
 				// Register the `NodeWith[PostType]Blocks` Interface to the post type
-				register_graphql_interfaces_to_types( array( 'NodeWith' . Utils::format_type_name( $post_type->graphql_single_name ) . 'EditorBlocks' ), array( $type_name ) );
+				register_graphql_interfaces_to_types( [ 'NodeWith' . Utils::format_type_name( $post_type->graphql_single_name ) . 'EditorBlocks' ], [ $type_name ] );
 			}
 		}//end foreach
 	}

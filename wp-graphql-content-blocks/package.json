@@ -1,7 +1,7 @@
 {
   "name": "@wpengine/wp-graphql-content-blocks",
   "private": true,
-  "version": "2.0.0",
+  "version": "4.3.1",
   "engines": {
     "node": ">=16.0.0"
   },
@@ -29,11 +29,9 @@
   ],
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
-    "@wordpress/e2e-test-utils": "^8.5.0",
-    "@wordpress/env": "^5.6.0",
     "@wordpress/jest-console": "^6.4.0",
     "@wordpress/jest-puppeteer-axe": "^5.4.0",
-    "@wordpress/scripts": "^24.6.0",
+    "@wordpress/scripts": "^28.1.0",
     "expect-puppeteer": "^6.1.1",
     "puppeteer-testing-library": "^0.6.0",
     "rimraf": "^4.4.0"
@@ -41,6 +39,8 @@
   "overrides": {
     "jest": "28.1.2",
     "semver": "~7.5.2",
-    "optionator": "0.9.3"
+    "optionator": "0.9.3",
+    "braces": "^3.0.3",
+    "ws": "^8.4.0"
   }
 }
