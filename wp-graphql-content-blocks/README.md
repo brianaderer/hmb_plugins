@@ -1,6 +1,6 @@
 # WPGraphQL Content Blocks
 
-[![End-to-End Tests](https://github.com/wpengine/wp-graphql-content-blocks/actions/workflows/e2e-tests.yml/badge.svg)](https://github.com/wpengine/wp-graphql-content-blocks/actions/workflows/e2e-tests.yml)
+[![Test Plugin](https://github.com/wpengine/wp-graphql-content-blocks/actions/workflows/test-plugin.yml/badge.svg)](https://github.com/wpengine/wp-graphql-content-blocks/actions/workflows/test-plugin.yml)
 
 [![Download Latest Version](https://img.shields.io/github/package-json/version/wpengine/wp-graphql-content-blocks?label=Download%20Latest%20Version)](https://github.com/wpengine/wp-graphql-content-blocks/releases/latest/download/wp-graphql-content-blocks.zip)
 
@@ -27,7 +27,7 @@ This represents a list of available blocks for that content type:
   posts {
     nodes {
       # editorBlocks field represents array of Block data
-      editorBlocks {
+      editorBlocks(flat: false) {
         # fields from the interface
         renderedHtml
         __typename
@@ -58,7 +58,7 @@ For example, to use `CoreParagraph` attributes you need to use the following que
 {
   posts {
     nodes {
-      editorBlocks {
+      editorBlocks(flat: false) {
         __typename
         name
         ... on CoreParagraph {
